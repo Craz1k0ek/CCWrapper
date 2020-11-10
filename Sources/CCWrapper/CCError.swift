@@ -1,6 +1,7 @@
 import CommonCryptoSPI
 
 public enum CryptorStatus: RawRepresentable {
+    case success
     /// Illegal parameter value.
     case paramError
     /// Insufficent buffer provided for specified operation.
@@ -28,6 +29,7 @@ public enum CryptorStatus: RawRepresentable {
     
     public init?(rawValue: RawValue) {
         switch rawValue {
+        case CCCryptorStatus(kCCSuccess):           self = .success
         case CCCryptorStatus(kCCParamError):        self = .paramError
         case CCCryptorStatus(kCCBufferTooSmall):    self = .bufferTooSmall
         case CCCryptorStatus(kCCMemoryFailure):     self = .memoryFailure
@@ -45,8 +47,28 @@ public enum CryptorStatus: RawRepresentable {
         }
     }
     
+    internal init(_ status: RawValue) {
+        switch status {
+        case CCCryptorStatus(kCCParamError):        self = .paramError
+        case CCCryptorStatus(kCCBufferTooSmall):    self = .bufferTooSmall
+        case CCCryptorStatus(kCCMemoryFailure):     self = .memoryFailure
+        case CCCryptorStatus(kCCAlignmentError):    self = .alignmentError
+        case CCCryptorStatus(kCCDecodeError):       self = .decodeError
+        case CCCryptorStatus(kCCUnimplemented):     self = .unimplemented
+        case CCCryptorStatus(kCCOverflow):          self = .overflow
+        case CCCryptorStatus(kCCRNGFailure):        self = .rngFailure
+        case CCCryptorStatus(kCCUnspecifiedError):  self = .unspecifiedError
+        case CCCryptorStatus(kCCCallSequenceError): self = .callSequenceError
+        case CCCryptorStatus(kCCKeySizeError):      self = .keySizeError
+        case CCCryptorStatus(kCCInvalidKey):        self = .invalidKey
+        case CCCryptorStatus(kCCNotVerified):       self = .notVerified
+        default:                                    self = .unknown(status)
+        }
+    }
+    
     public var rawValue: CCCryptorStatus {
         switch self {
+        case .success:              return CCCryptorStatus(kCCSuccess)
         case .paramError:           return CCCryptorStatus(kCCParamError)
         case .bufferTooSmall:       return CCCryptorStatus(kCCBufferTooSmall)
         case .memoryFailure: 		return CCCryptorStatus(kCCMemoryFailure)
@@ -65,8 +87,7 @@ public enum CryptorStatus: RawRepresentable {
     }
 }
 
-/// Return values from CommonCryptor operations.
-/// Interpreted into errors.
+/// Return values from CommonCryptor operations interpreted into errors.
 /// - Note: `kCCSuccess` is not considered an error.
 public enum CryptoError: Swift.Error {
     /// Illegal parameter value.
