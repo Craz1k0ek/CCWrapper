@@ -43,7 +43,7 @@ public enum CCCryptorStatus: RawRepresentable {
         case CommonCrypto.CCCryptorStatus(kCCKeySizeError):      self = .keySizeError
         case CommonCrypto.CCCryptorStatus(kCCInvalidKey):        self = .invalidKey
         case CommonCrypto.CCCryptorStatus(kCCNotVerified):       self = .notVerified
-        default:                                    self = .unknown(rawValue)
+        default:                                                 self = .unknown(rawValue)
         }
     }
     
@@ -62,7 +62,7 @@ public enum CCCryptorStatus: RawRepresentable {
         case CommonCrypto.CCCryptorStatus(kCCKeySizeError):      self = .keySizeError
         case CommonCrypto.CCCryptorStatus(kCCInvalidKey):        self = .invalidKey
         case CommonCrypto.CCCryptorStatus(kCCNotVerified):       self = .notVerified
-        default:                                    self = .unknown(status)
+        default:                                                 self = .unknown(status)
         }
     }
     
