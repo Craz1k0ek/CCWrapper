@@ -1,6 +1,6 @@
 import CommonCryptoSPI
 
-public enum CryptorStatus: RawRepresentable {
+public enum CCCryptorStatus: RawRepresentable {
     case success
     /// Illegal parameter value.
     case paramError
@@ -23,65 +23,65 @@ public enum CryptorStatus: RawRepresentable {
     case invalidKey
     /// Signature verification failed.
     case notVerified
-    case unknown(CCCryptorStatus)
+    case unknown(CommonCrypto.CCCryptorStatus)
     
-    public typealias RawValue = CCCryptorStatus
+    public typealias RawValue = CommonCrypto.CCCryptorStatus
     
     public init?(rawValue: RawValue) {
         switch rawValue {
-        case CCCryptorStatus(kCCSuccess):           self = .success
-        case CCCryptorStatus(kCCParamError):        self = .paramError
-        case CCCryptorStatus(kCCBufferTooSmall):    self = .bufferTooSmall
-        case CCCryptorStatus(kCCMemoryFailure):     self = .memoryFailure
-        case CCCryptorStatus(kCCAlignmentError):    self = .alignmentError
-        case CCCryptorStatus(kCCDecodeError):       self = .decodeError
-        case CCCryptorStatus(kCCUnimplemented):     self = .unimplemented
-        case CCCryptorStatus(kCCOverflow):          self = .overflow
-        case CCCryptorStatus(kCCRNGFailure):        self = .rngFailure
-        case CCCryptorStatus(kCCUnspecifiedError):  self = .unspecifiedError
-        case CCCryptorStatus(kCCCallSequenceError): self = .callSequenceError
-        case CCCryptorStatus(kCCKeySizeError):      self = .keySizeError
-        case CCCryptorStatus(kCCInvalidKey):        self = .invalidKey
-        case CCCryptorStatus(kCCNotVerified):       self = .notVerified
+        case CommonCrypto.CCCryptorStatus(kCCSuccess):           self = .success
+        case CommonCrypto.CCCryptorStatus(kCCParamError):        self = .paramError
+        case CommonCrypto.CCCryptorStatus(kCCBufferTooSmall):    self = .bufferTooSmall
+        case CommonCrypto.CCCryptorStatus(kCCMemoryFailure):     self = .memoryFailure
+        case CommonCrypto.CCCryptorStatus(kCCAlignmentError):    self = .alignmentError
+        case CommonCrypto.CCCryptorStatus(kCCDecodeError):       self = .decodeError
+        case CommonCrypto.CCCryptorStatus(kCCUnimplemented):     self = .unimplemented
+        case CommonCrypto.CCCryptorStatus(kCCOverflow):          self = .overflow
+        case CommonCrypto.CCCryptorStatus(kCCRNGFailure):        self = .rngFailure
+        case CommonCrypto.CCCryptorStatus(kCCUnspecifiedError):  self = .unspecifiedError
+        case CommonCrypto.CCCryptorStatus(kCCCallSequenceError): self = .callSequenceError
+        case CommonCrypto.CCCryptorStatus(kCCKeySizeError):      self = .keySizeError
+        case CommonCrypto.CCCryptorStatus(kCCInvalidKey):        self = .invalidKey
+        case CommonCrypto.CCCryptorStatus(kCCNotVerified):       self = .notVerified
         default:                                    self = .unknown(rawValue)
         }
     }
     
     internal init(_ status: RawValue) {
         switch status {
-        case CCCryptorStatus(kCCParamError):        self = .paramError
-        case CCCryptorStatus(kCCBufferTooSmall):    self = .bufferTooSmall
-        case CCCryptorStatus(kCCMemoryFailure):     self = .memoryFailure
-        case CCCryptorStatus(kCCAlignmentError):    self = .alignmentError
-        case CCCryptorStatus(kCCDecodeError):       self = .decodeError
-        case CCCryptorStatus(kCCUnimplemented):     self = .unimplemented
-        case CCCryptorStatus(kCCOverflow):          self = .overflow
-        case CCCryptorStatus(kCCRNGFailure):        self = .rngFailure
-        case CCCryptorStatus(kCCUnspecifiedError):  self = .unspecifiedError
-        case CCCryptorStatus(kCCCallSequenceError): self = .callSequenceError
-        case CCCryptorStatus(kCCKeySizeError):      self = .keySizeError
-        case CCCryptorStatus(kCCInvalidKey):        self = .invalidKey
-        case CCCryptorStatus(kCCNotVerified):       self = .notVerified
+        case CommonCrypto.CCCryptorStatus(kCCParamError):        self = .paramError
+        case CommonCrypto.CCCryptorStatus(kCCBufferTooSmall):    self = .bufferTooSmall
+        case CommonCrypto.CCCryptorStatus(kCCMemoryFailure):     self = .memoryFailure
+        case CommonCrypto.CCCryptorStatus(kCCAlignmentError):    self = .alignmentError
+        case CommonCrypto.CCCryptorStatus(kCCDecodeError):       self = .decodeError
+        case CommonCrypto.CCCryptorStatus(kCCUnimplemented):     self = .unimplemented
+        case CommonCrypto.CCCryptorStatus(kCCOverflow):          self = .overflow
+        case CommonCrypto.CCCryptorStatus(kCCRNGFailure):        self = .rngFailure
+        case CommonCrypto.CCCryptorStatus(kCCUnspecifiedError):  self = .unspecifiedError
+        case CommonCrypto.CCCryptorStatus(kCCCallSequenceError): self = .callSequenceError
+        case CommonCrypto.CCCryptorStatus(kCCKeySizeError):      self = .keySizeError
+        case CommonCrypto.CCCryptorStatus(kCCInvalidKey):        self = .invalidKey
+        case CommonCrypto.CCCryptorStatus(kCCNotVerified):       self = .notVerified
         default:                                    self = .unknown(status)
         }
     }
     
-    public var rawValue: CCCryptorStatus {
+    public var rawValue: CommonCrypto.CCCryptorStatus {
         switch self {
-        case .success:              return CCCryptorStatus(kCCSuccess)
-        case .paramError:           return CCCryptorStatus(kCCParamError)
-        case .bufferTooSmall:       return CCCryptorStatus(kCCBufferTooSmall)
-        case .memoryFailure: 		return CCCryptorStatus(kCCMemoryFailure)
-        case .alignmentError: 	    return CCCryptorStatus(kCCAlignmentError)
-        case .decodeError: 	        return CCCryptorStatus(kCCDecodeError)
-        case .unimplemented: 	    return CCCryptorStatus(kCCUnimplemented)
-        case .overflow:             return CCCryptorStatus(kCCOverflow)
-        case .rngFailure:       	return CCCryptorStatus(kCCRNGFailure)
-        case .unspecifiedError:     return CCCryptorStatus(kCCUnspecifiedError)
-        case .callSequenceError:    return CCCryptorStatus(kCCCallSequenceError)
-        case .keySizeError:         return CCCryptorStatus(kCCKeySizeError)
-        case .invalidKey:           return CCCryptorStatus(kCCInvalidKey)
-        case .notVerified:          return CCCryptorStatus(kCCNotVerified)
+        case .success:              return CommonCrypto.CCCryptorStatus(kCCSuccess)
+        case .paramError:           return CommonCrypto.CCCryptorStatus(kCCParamError)
+        case .bufferTooSmall:       return CommonCrypto.CCCryptorStatus(kCCBufferTooSmall)
+        case .memoryFailure: 		return CommonCrypto.CCCryptorStatus(kCCMemoryFailure)
+        case .alignmentError: 	    return CommonCrypto.CCCryptorStatus(kCCAlignmentError)
+        case .decodeError: 	        return CommonCrypto.CCCryptorStatus(kCCDecodeError)
+        case .unimplemented: 	    return CommonCrypto.CCCryptorStatus(kCCUnimplemented)
+        case .overflow:             return CommonCrypto.CCCryptorStatus(kCCOverflow)
+        case .rngFailure:       	return CommonCrypto.CCCryptorStatus(kCCRNGFailure)
+        case .unspecifiedError:     return CommonCrypto.CCCryptorStatus(kCCUnspecifiedError)
+        case .callSequenceError:    return CommonCrypto.CCCryptorStatus(kCCCallSequenceError)
+        case .keySizeError:         return CommonCrypto.CCCryptorStatus(kCCKeySizeError)
+        case .invalidKey:           return CommonCrypto.CCCryptorStatus(kCCInvalidKey)
+        case .notVerified:          return CommonCrypto.CCCryptorStatus(kCCNotVerified)
         case .unknown(let status):  return status
         }
     }
@@ -111,9 +111,9 @@ public enum CryptoError: Swift.Error {
     case invalidKey
     /// Signature verification failed.
     case notVerified
-    case unknown(CryptorStatus)
+    case unknown(CCCryptorStatus)
     
-    init(_ status: CryptorStatus) {
+    init(_ status: CCCryptorStatus) {
         switch status {
         case .paramError:           self = .paramError
         case .bufferTooSmall:       self = .bufferTooSmall

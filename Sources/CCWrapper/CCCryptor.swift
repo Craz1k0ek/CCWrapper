@@ -2,10 +2,10 @@ import CommonCryptoSPI
 import Foundation
 
 /// Opaque reference type to a CCCryptor object.
-public typealias CryptorRef = CommonCrypto.CCCryptorRef
+public typealias CCCryptorRef = CommonCrypto.CCCryptorRef
 
 /// Operations that a cryptor can perform.
-public enum Operation: RawRepresentable {
+public enum CCOperation: RawRepresentable {
     /// The encrypt operation.
     case encrypt
     /// The decrypt operation.
@@ -34,7 +34,7 @@ public enum Operation: RawRepresentable {
 }
 
 /// Encryption algorithms implemented by this module.
-public enum Algorithm: RawRepresentable {
+public enum CCAlgorithm: RawRepresentable {
     /// Advanced Encryption Standard, 128-bit block.
     case aes
     /// Data Encryption Standard.
@@ -79,7 +79,7 @@ public enum Algorithm: RawRepresentable {
 }
 
 /// Key sizes, in bytes, for supported algorithms.
-public enum KeySize {
+public enum CCKeySize {
     /// 128 bit AES key size.
     case aes128
     /// 192 bit AES key size.
@@ -127,7 +127,7 @@ public enum KeySize {
 }
 
 /// Block sizes, in bytes, for supported algorithms.
-public enum BlockSize {
+public enum CCBlockSize {
     /// AES block size (currently, only 128-bit blocks are supported).
     case aes
     /// DES block size.
@@ -155,7 +155,7 @@ public enum BlockSize {
 
 /// These are the selections available for modes of operation for use with block ciphers.
 /// If RC4 is selected as the cipher (a stream cipher) the only correct mode is `.rc4`.
-public enum Mode: RawRepresentable {
+public enum CCMode: RawRepresentable {
     /// Electronic Code Book Mode.
     case ecb
     /// Cipher Block Chaining Mode.
@@ -209,7 +209,7 @@ public enum Mode: RawRepresentable {
 }
 
 /// These are the padding options available for block modes.
-public enum Padding: RawRepresentable {
+public enum CCPadding: RawRepresentable {
     /// No padding.
     case none
     /// PKCS7 Padding.
@@ -233,7 +233,7 @@ public enum Padding: RawRepresentable {
     }
 }
 
-public enum Parameter: RawRepresentable {
+public enum CCParameter: RawRepresentable {
     /// Initialization vector - cryptor input parameter, typically needs to have the same length as block size,
     /// but in some cases (GCM) it can be arbitrarily long and even might be called multiple times.
     case iv
@@ -250,26 +250,26 @@ public enum Parameter: RawRepresentable {
     /// If supported, should be retrieved after the encryption finishes.
     case authenticationTag
     
-    public typealias RawValue = CCParameter
+    public typealias RawValue = CommonCryptoSPI.CCParameter
     
     public init?(rawValue: RawValue) {
         switch rawValue {
-        case CCParameter(kCCParameterIV):       self = .iv
-        case CCParameter(kCCParameterAuthData): self = .authenticationData
-        case CCParameter(kCCMacSize):           self = .macSize
-        case CCParameter(kCCDataSize):          self = .dataSize
-        case CCParameter(kCCParameterAuthTag): 	self = .authenticationTag
+        case CommonCryptoSPI.CCParameter(kCCParameterIV):       self = .iv
+        case CommonCryptoSPI.CCParameter(kCCParameterAuthData): self = .authenticationData
+        case CommonCryptoSPI.CCParameter(kCCMacSize):           self = .macSize
+        case CommonCryptoSPI.CCParameter(kCCDataSize):          self = .dataSize
+        case CommonCryptoSPI.CCParameter(kCCParameterAuthTag): 	self = .authenticationTag
         default: return nil
         }
     }
     
-    public var rawValue: CCParameter {
+    public var rawValue: CommonCryptoSPI.CCParameter {
         switch self {
-        case .iv:                   return  CCParameter(kCCParameterIV)
-        case .authenticationData:   return  CCParameter(kCCParameterAuthData)
-        case .macSize:              return  CCParameter(kCCMacSize)
-        case .dataSize:             return  CCParameter(kCCDataSize)
-        case .authenticationTag:    return  CCParameter(kCCParameterAuthTag)
+        case .iv:                   return CommonCryptoSPI.CCParameter(kCCParameterIV)
+        case .authenticationData:   return CommonCryptoSPI.CCParameter(kCCParameterAuthData)
+        case .macSize:              return CommonCryptoSPI.CCParameter(kCCMacSize)
+        case .dataSize:             return CommonCryptoSPI.CCParameter(kCCDataSize)
+        case .authenticationTag:    return CommonCryptoSPI.CCParameter(kCCParameterAuthTag)
         }
     }
 }
@@ -277,8 +277,8 @@ public enum Parameter: RawRepresentable {
 /// Free a cryptor reference.
 /// - Parameter reference: The reference to free.
 /// - Throws: A `CryptoError` describing the issue.
-public func CryptorRelease(_ reference: CryptorRef?) throws {
-    let status = CryptorStatus(CommonCrypto.CCCryptorRelease(reference))
+public func CCCryptorRelease(_ reference: CCCryptorRef?) throws {
+    let status = CCCryptorStatus(CommonCrypto.CCCryptorRelease(reference))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -288,7 +288,7 @@ public func CryptorRelease(_ reference: CryptorRef?) throws {
 ///   - inputLength: The length of data to process.
 ///   - final: Whether or not this is the final operation.
 /// - Returns: The required size in the output buffer to process input size bytes.
-public func CryptorGetOutputLength(_ reference: CCCryptorRef?, inputLength: Int, final: Bool) -> Int {
+public func CCCryptorGetOutputLength(_ reference: CCCryptorRef?, inputLength: Int, final: Bool) -> Int {
     CommonCrypto.CCCryptorGetOutputLength(reference, inputLength, final)
 }
 
@@ -298,10 +298,10 @@ public func CryptorGetOutputLength(_ reference: CCCryptorRef?, inputLength: Int,
 ///   - data: The data to process.
 /// - Throws: A `CryptoError` describing the issue.
 /// - Returns: The processed data.
-public func CryptorUpdate(_ reference: CryptorRef?, data: Data) throws -> Data {
-    var output = [UInt8](repeating: 0, count: CryptorGetOutputLength(reference, inputLength: data.count, final: false))
-    let status = data.withUnsafeBytes { dataPointer -> CryptorStatus in
-        CryptorStatus(CommonCrypto.CCCryptorUpdate(reference, dataPointer.baseAddress, data.count, &output, output.count, nil))
+public func CCCryptorUpdate(_ reference: CCCryptorRef?, data: Data) throws -> Data {
+    var output = [UInt8](repeating: 0, count: CCCryptorGetOutputLength(reference, inputLength: data.count, final: false))
+    let status = data.withUnsafeBytes { dataPointer -> CCCryptorStatus in
+        CCCryptorStatus(CommonCrypto.CCCryptorUpdate(reference, dataPointer.baseAddress, data.count, &output, output.count, nil))
     }
     guard status == .success else { throw CryptoError(status) }
     return Data(output)
@@ -311,10 +311,10 @@ public func CryptorUpdate(_ reference: CryptorRef?, data: Data) throws -> Data {
 /// - Parameter reference: The cryptor reference.
 /// - Throws: A `CryptoError` describing the issue.
 /// - Returns: The processed final data.
-public func CryptorFinalize(_ reference: CryptorRef?) throws -> Data {
-    var output = [UInt8](repeating: 0, count: CryptorGetOutputLength(reference, inputLength: 0, final: true))
+public func CCCryptorFinalize(_ reference: CCCryptorRef?) throws -> Data {
+    var output = [UInt8](repeating: 0, count: CCCryptorGetOutputLength(reference, inputLength: 0, final: true))
     var moved = 0
-    let status = CryptorStatus(CommonCrypto.CCCryptorFinal(reference, &output, output.count, &moved))
+    let status = CCCryptorStatus(CommonCrypto.CCCryptorFinal(reference, &output, output.count, &moved))
     guard status == .success else { throw CryptoError(status) }
     output.removeSubrange(moved...)
     return Data(output)
@@ -331,32 +331,32 @@ public func CryptorFinalize(_ reference: CryptorRef?) throws -> Data {
 ///   - tweak: Raw key material.
 ///   - reference: The cryptor reference.
 /// - Throws: A `CryptoError` describing the issue.
-public func CryptorCreateWithMode(op: Operation, mode: Mode, alg: Algorithm, padding: Padding, iv: Data?, key: Data, tweak: Data?, reference: inout CryptorRef?) throws {
+public func CCCryptorCreateWithMode(op: CCOperation, mode: CCMode, alg: CCAlgorithm, padding: CCPadding, iv: Data?, key: Data, tweak: Data?, reference: inout CCCryptorRef?) throws {
     let iv: [UInt8]?    = iv == nil ? nil : Array(iv!)
     let tweak: [UInt8]? = tweak == nil ? nil : Array(tweak!)
     
-    let status = key.withUnsafeBytes { keyPtr -> CryptorStatus in
-        CryptorStatus(CCCryptorCreateWithMode(op.rawValue, mode.rawValue, alg.rawValue, padding.rawValue, iv, keyPtr.baseAddress, key.count, tweak, tweak?.count ?? 0, 0, 0, &reference))
+    let status = key.withUnsafeBytes { keyPtr -> CCCryptorStatus in
+        CCCryptorStatus(CommonCryptoSPI.CCCryptorCreateWithMode(op.rawValue, mode.rawValue, alg.rawValue, padding.rawValue, iv, keyPtr.baseAddress, key.count, tweak, tweak?.count ?? 0, 0, 0, &reference))
     }
     guard status == .success else { throw CryptoError(status) }
 }
 
-public func CryptorEncryptDataBlock(_ reference: CryptorRef?, iv: Data, data: Data) throws -> Data {
+public func CCCryptorEncryptDataBlock(_ reference: CCCryptorRef?, iv: Data, data: Data) throws -> Data {
     var output = [UInt8](repeating: 0, count: data.count)
-    let status = iv.withUnsafeBytes { ivPtr -> CryptorStatus in
-        data.withUnsafeBytes { dataPtr -> CryptorStatus in
-            CryptorStatus(CCCryptorEncryptDataBlock(reference, ivPtr.baseAddress, dataPtr.baseAddress, data.count, &output))
+    let status = iv.withUnsafeBytes { ivPtr -> CCCryptorStatus in
+        data.withUnsafeBytes { dataPtr -> CCCryptorStatus in
+            CCCryptorStatus(CommonCryptoSPI.CCCryptorEncryptDataBlock(reference, ivPtr.baseAddress, dataPtr.baseAddress, data.count, &output))
         }
     }
     guard status == .success else { throw CryptoError(status) }
     return Data(output)
 }
 
-public func CryptorDecryptDataBlock(_ reference: CryptorRef?, iv: Data, data: Data) throws -> Data {
+public func CCCryptorDecryptDataBlock(_ reference: CCCryptorRef?, iv: Data, data: Data) throws -> Data {
     var output = [UInt8](repeating: 0, count: data.count)
-    let status = iv.withUnsafeBytes { ivPtr -> CryptorStatus in
-        data.withUnsafeBytes { dataPtr -> CryptorStatus in
-            CryptorStatus(CCCryptorDecryptDataBlock(reference, ivPtr.baseAddress, dataPtr.baseAddress, data.count, &output))
+    let status = iv.withUnsafeBytes { ivPtr -> CCCryptorStatus in
+        data.withUnsafeBytes { dataPtr -> CCCryptorStatus in
+            CCCryptorStatus(CommonCryptoSPI.CCCryptorDecryptDataBlock(reference, ivPtr.baseAddress, dataPtr.baseAddress, data.count, &output))
         }
     }
     guard status == .success else { throw CryptoError(status) }
@@ -367,9 +367,9 @@ public func CryptorDecryptDataBlock(_ reference: CryptorRef?, iv: Data, data: Da
 /// - Note: On encryption, the computed tag is returned in the tag field.
 /// On decryption, the provided tag is securely compared to the expected tag and an error is thrown if the tags do not match.
 /// - Throws: A `CryptoError` describing the issue.
-public func CryptorGCMFinalize(_ reference: CryptorRef?, tag: inout Data) throws {
-    let status = tag.withUnsafeMutableBytes { tagPtr -> CryptorStatus in
-        CryptorStatus(CCCryptorGCMFinalize(reference, tagPtr.baseAddress, tagPtr.count))
+public func CCCryptorGCMFinalize(_ reference: CCCryptorRef?, tag: inout Data) throws {
+    let status = tag.withUnsafeMutableBytes { tagPtr -> CCCryptorStatus in
+        CCCryptorStatus(CommonCryptoSPI.CCCryptorGCMFinalize(reference, tagPtr.baseAddress, tagPtr.count))
     }
     guard status == .success else { throw CryptoError(status) }
 }
@@ -377,8 +377,8 @@ public func CryptorGCMFinalize(_ reference: CryptorRef?, tag: inout Data) throws
 /// Reset the GCM state to the initial state.
 /// - Note: After that, the initialization vector and authentication data will have to be added again.
 /// - Throws: A `CryptoError` describing the issue.
-public func CryptorGCMReset(_ reference: CryptorRef?) throws {
-    let status = CryptorStatus(CCCryptorGCMReset(reference))
+public func CCCryptorGCMReset(_ reference: CCCryptorRef?) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCCryptorGCMReset(reference))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -396,9 +396,9 @@ public func CryptorGCMReset(_ reference: CryptorRef?) throws {
 ///   - parameter: The parameter to set.
 ///   - data: The data to set the parameter to.
 /// - Throws: A `CryptoError` describing the issue.
-public func CryptorAddParameter(_ reference: CryptorRef?, parameter: Parameter, data: Data) throws {
-    let status = data.withUnsafeBytes { dataPtr -> CryptorStatus in
-        CryptorStatus(CCCryptorAddParameter(reference, parameter.rawValue, dataPtr.baseAddress, dataPtr.count))
+public func CCCryptorAddParameter(_ reference: CCCryptorRef?, parameter: CCParameter, data: Data) throws {
+    let status = data.withUnsafeBytes { dataPtr -> CCCryptorStatus in
+        CCCryptorStatus(CommonCryptoSPI.CCCryptorAddParameter(reference, parameter.rawValue, dataPtr.baseAddress, dataPtr.count))
     }
     guard status == .success else { throw CryptoError(status) }
 }
@@ -409,8 +409,8 @@ public func CryptorAddParameter(_ reference: CryptorRef?, parameter: Parameter, 
 ///   - parameter: The parameter to set.
 ///   - size: The size to set.
 /// - Throws: A `CryptoError` describing the issue.
-public func CryptorAddParameter(_ reference: CryptorRef?, parameter: Parameter, size: Int) throws {
-    let status = CryptorStatus(CCCryptorAddParameter(reference, parameter.rawValue, nil, size))
+public func CCCryptorAddParameter(_ reference: CCCryptorRef?, parameter: CCParameter, size: Int) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCCryptorAddParameter(reference, parameter.rawValue, nil, size))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -421,10 +421,10 @@ public func CryptorAddParameter(_ reference: CryptorRef?, parameter: Parameter, 
 ///   - size: The expected output size.
 /// - Throws: A `CryptoError` describing the issue.
 /// - Returns: The retrieved data of the parameter.
-public func CryptorGetParameter(_ reference: CryptorRef?, parameter: Parameter, size: Int) throws -> Data {
+public func CCCryptorGetParameter(_ reference: CCCryptorRef?, parameter: CCParameter, size: Int) throws -> Data {
     var size = size
     var output = [UInt8](repeating: 0, count: size)
-    let status = CryptorStatus(CCCryptorGetParameter(reference, parameter.rawValue, &output, &size))
+    let status = CCCryptorStatus(CommonCryptoSPI.CCCryptorGetParameter(reference, parameter.rawValue, &output, &size))
     guard status == .success else { throw CryptoError(status) }
     output.removeSubrange(size...)
     return Data(output)

@@ -2,10 +2,10 @@ import CommonCryptoSPI
 import Foundation
 
 /// Digest context.
-public typealias DigestRef = CCDigestRef
+public typealias CCDigestRef = CommonCryptoSPI.CCDigestRef
 
 /// Algorithms implemented in this module.
-public enum DigestAlgorithm: RawRepresentable {
+public enum CCDigestAlgorithm: RawRepresentable {
     /// MD5 digest.
     @available(iOS, deprecated: 13.0)
     @available(macOS, deprecated: 10.15)
@@ -27,30 +27,30 @@ public enum DigestAlgorithm: RawRepresentable {
     /// SHA-2 512 bit digest.
     case sha512
     
-    public typealias RawValue = CCDigestAlgorithm
+    public typealias RawValue = CommonCryptoSPI.CCDigestAlgorithm
     
     public init?(rawValue: RawValue) {
         switch rawValue {
-        case CCDigestAlgorithm(kCCDigestMD5):       self = .md5
-        case CCDigestAlgorithm(kCCDigestRMD160):    self = .rmd160
-        case CCDigestAlgorithm(kCCDigestSHA1):      self = .sha1
-        case CCDigestAlgorithm(kCCDigestSHA224):    self = .sha224
-        case CCDigestAlgorithm(kCCDigestSHA256):    self = .sha256
-        case CCDigestAlgorithm(kCCDigestSHA384):    self = .sha384
-        case CCDigestAlgorithm(kCCDigestSHA512):    self = .sha512
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestMD5):       self = .md5
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestRMD160):    self = .rmd160
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA1):      self = .sha1
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA224):    self = .sha224
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA256):    self = .sha256
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA384):    self = .sha384
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA512):    self = .sha512
         default: return nil
         }
     }
     
-    public var rawValue: CCDigestAlgorithm {
+    public var rawValue: CommonCryptoSPI.CCDigestAlgorithm {
         switch self {
-        case .md5:      return CCDigestAlgorithm(kCCDigestMD5)
-        case .rmd160:   return CCDigestAlgorithm(kCCDigestRMD160)
-        case .sha1:     return CCDigestAlgorithm(kCCDigestSHA1)
-        case .sha224:   return CCDigestAlgorithm(kCCDigestSHA224)
-        case .sha256:   return CCDigestAlgorithm(kCCDigestSHA256)
-        case .sha384:   return CCDigestAlgorithm(kCCDigestSHA384)
-        case .sha512:   return CCDigestAlgorithm(kCCDigestSHA512)
+        case .md5:      return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestMD5)
+        case .rmd160:   return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestRMD160)
+        case .sha1:     return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA1)
+        case .sha224:   return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA224)
+        case .sha256:   return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA256)
+        case .sha384:   return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA384)
+        case .sha512:   return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA512)
         }
     }
 }
@@ -60,8 +60,8 @@ public enum DigestAlgorithm: RawRepresentable {
 ///   - algorithm: The digest algorithm to perform.
 ///   - reference: The reference to set.
 /// - Throws: A `CryptoError` describing the issue.
-public func DigestInit(algorithm: DigestAlgorithm, reference: DigestRef?) throws {
-    let status = CryptorStatus(CCDigestInit(algorithm.rawValue, reference))
+public func CCDigestInit(algorithm: CCDigestAlgorithm, reference: CCDigestRef?) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCDigestInit(algorithm.rawValue, reference))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -71,10 +71,10 @@ public func DigestInit(algorithm: DigestAlgorithm, reference: DigestRef?) throws
 ///   - data: The data to digest.
 /// - Throws: A `CryptoError` describing the issue.
 /// - Returns: The digest bytes.
-public func Digest(algorithm: DigestAlgorithm, data: Data) throws -> Data {
-    var output = [UInt8](repeating: 0, count: DigestGetOutputSize(algorithm))
-    let status = withUnsafeBytes(of: data) { dataPtr -> CryptorStatus in
-        CryptorStatus(CCDigest(algorithm.rawValue, Array(dataPtr), data.count, &output))
+public func CCDigest(algorithm: CCDigestAlgorithm, data: Data) throws -> Data {
+    var output = [UInt8](repeating: 0, count: CCDigestGetOutputSize(algorithm))
+    let status = withUnsafeBytes(of: data) { dataPtr -> CCCryptorStatus in
+        CCCryptorStatus(CommonCryptoSPI.CCDigest(algorithm.rawValue, Array(dataPtr), data.count, &output))
     }
     guard status == .success else { throw CryptoError(status) }
     return Data(output)
@@ -83,8 +83,8 @@ public func Digest(algorithm: DigestAlgorithm, data: Data) throws -> Data {
 /// Allocate and initialize a CCDigestCtx for a digest.
 /// - Parameter algorithm: Digest algorithm to setup.
 /// - Returns: Returns a pointer to a digestRef on success.
-public func DigestCreate(algorithm: DigestAlgorithm) -> DigestRef {
-    CCDigestCreate(algorithm.rawValue)
+public func CCDigestCreate(algorithm: CCDigestAlgorithm) -> CCDigestRef {
+    CommonCryptoSPI.CCDigestCreate(algorithm.rawValue)
 }
 
 /// Continue to digest data.
@@ -92,9 +92,9 @@ public func DigestCreate(algorithm: DigestAlgorithm) -> DigestRef {
 ///   - reference: A digest context.
 ///   - data: The data to digest.
 /// - Throws: A `CryptoError` describing the issue.
-public func DigestUpdate(_ reference: DigestRef?, data: Data) throws {
-    let status = data.withUnsafeBytes { dataPtr -> CryptorStatus in
-        CryptorStatus(CCDigestUpdate(reference, dataPtr.baseAddress, dataPtr.count))
+public func CCDigestUpdate(_ reference: CCDigestRef?, data: Data) throws {
+    let status = data.withUnsafeBytes { dataPtr -> CCCryptorStatus in
+        CCCryptorStatus(CommonCryptoSPI.CCDigestUpdate(reference, dataPtr.baseAddress, dataPtr.count))
     }
     guard status == .success else { throw CryptoError(status) }
 }
@@ -103,49 +103,49 @@ public func DigestUpdate(_ reference: DigestRef?, data: Data) throws {
 /// - Parameter reference: A digest context.
 /// - Throws: A `CryptoError` describing the issue.
 /// - Returns: The digest bytes.
-public func DigestFinalize(_ reference: DigestRef?) throws -> Data {
-    var output = [UInt8](repeating: 0, count: DigestGetOutputSizeFromRef(reference))
-    let status = CryptorStatus(CCDigestFinal(reference, &output))
+public func CCDigestFinalize(_ reference: CCDigestRef?) throws -> Data {
+    var output = [UInt8](repeating: 0, count: CCDigestGetOutputSizeFromRef(reference))
+    let status = CCCryptorStatus(CommonCryptoSPI.CCDigestFinal(reference, &output))
     guard status == .success else { throw CryptoError(status) }
     return Data(output)
 }
 
 /// Clear and free a CCDigestCtx
 /// - Parameter reference: A digest context.
-public func DigestDestroy(_ reference: DigestRef?) {
-    CCDigestDestroy(reference)
+public func CCDigestDestroy(_ reference: CCDigestRef?) {
+    CommonCryptoSPI.CCDigestDestroy(reference)
 }
 
 /// Clear and re-initialize a CCDigestCtx for the same algorithm.
 /// - Parameter reference: A digest context.
-public func DigestReset(_ reference: DigestRef?) {
-    CCDigestReset(reference)
+public func CCDigestReset(_ reference: CCDigestRef?) {
+    CommonCryptoSPI.CCDigestReset(reference)
 }
 
 /// Provides the block size of the digest algorithm.
 /// - Parameter algorithm: A digest algorithm selector.
 /// - Returns: Returns 0 on failure or the block size on success.
-public func DigestGetBlockSize(_ algorithm: DigestAlgorithm) -> Int {
-    CCDigestGetBlockSize(algorithm.rawValue)
+public func CCDigestGetBlockSize(_ algorithm: CCDigestAlgorithm) -> Int {
+    CommonCryptoSPI.CCDigestGetBlockSize(algorithm.rawValue)
 }
 
 /// Provides the digest output size of the digest algorithm
 /// - Parameter algorithm: A digest algorithm selector.
 /// - Returns: Returns 0 on failure or the digest output size on success.
-public func DigestGetOutputSize(_ algorithm: DigestAlgorithm) -> Int {
-    CCDigestGetOutputSize(algorithm.rawValue)
+public func CCDigestGetOutputSize(_ algorithm: CCDigestAlgorithm) -> Int {
+    CommonCryptoSPI.CCDigestGetOutputSize(algorithm.rawValue)
 }
 
 /// Provides the block size of the digest algorithm
 /// - Parameter reference: A digest context.
 /// - Returns: Returns 0 on failure or the block size on success.
-public func DigestGetBlockSizeFromRef(_ reference: DigestRef?) -> Int {
-    CCDigestGetBlockSizeFromRef(reference)
+public func CCDigestGetBlockSizeFromRef(_ reference: CCDigestRef?) -> Int {
+    CommonCryptoSPI.CCDigestGetBlockSizeFromRef(reference)
 }
 
 /// Provides the digest output size of the digest algorithm
 /// - Parameter reference: A digest context.
 /// - Returns: Returns 0 on failure or the digest output size on success.
-public func DigestGetOutputSizeFromRef(_ reference: DigestRef?) -> Int {
-    CCDigestGetOutputSizeFromRef(reference)
+public func CCDigestGetOutputSizeFromRef(_ reference: CCDigestRef?) -> Int {
+    CommonCryptoSPI.CCDigestGetOutputSizeFromRef(reference)
 }

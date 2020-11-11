@@ -1,82 +1,82 @@
 import CommonCryptoSPI
 import Foundation
 
-public typealias KDFParametersRef = CCKDFParametersRef
+public typealias CCKDFParametersRef = CommonCryptoSPI.CCKDFParametersRef
 
 /// Key Derivation algorithms implemented by this module.
-public enum KDFAlgorithm: RawRepresentable {
+public enum CCKDFAlgorithm: RawRepresentable {
     case pbkdf2Hmac
     case ctrHmac
     case ctrHmacFixed
     case hkdf
     case ansiX963
     
-    public typealias RawValue = CCKDFAlgorithm
+    public typealias RawValue = CommonCryptoSPI.CCKDFAlgorithm
     
     public init?(rawValue: RawValue) {
         switch rawValue {
-        case CCKDFAlgorithm(kCCKDFAlgorithmPBKDF2_HMAC):    self = .pbkdf2Hmac
-        case CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC):       self = .ctrHmac
-        case CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC_FIXED): self = .ctrHmacFixed
-        case CCKDFAlgorithm(kCCKDFAlgorithmHKDF):           self = .hkdf
-        case CCKDFAlgorithm(kCCKDFAlgorithmAnsiX963):       self = .ansiX963
+        case CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmPBKDF2_HMAC):    self = .pbkdf2Hmac
+        case CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC):       self = .ctrHmac
+        case CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC_FIXED): self = .ctrHmacFixed
+        case CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmHKDF):           self = .hkdf
+        case CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmAnsiX963):       self = .ansiX963
         default: return nil
         }
     }
     
-    public var rawValue: CCKDFAlgorithm {
+    public var rawValue: CommonCryptoSPI.CCKDFAlgorithm {
         switch self {
-        case .pbkdf2Hmac:   return CCKDFAlgorithm(kCCKDFAlgorithmPBKDF2_HMAC)
-        case .ctrHmac:      return CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC)
-        case .ctrHmacFixed: return CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC_FIXED)
-        case .hkdf:         return CCKDFAlgorithm(kCCKDFAlgorithmHKDF)
-        case .ansiX963:     return CCKDFAlgorithm(kCCKDFAlgorithmAnsiX963)
+        case .pbkdf2Hmac:   return CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmPBKDF2_HMAC)
+        case .ctrHmac:      return CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC)
+        case .ctrHmacFixed: return CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmCTR_HMAC_FIXED)
+        case .hkdf:         return CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmHKDF)
+        case .ansiX963:     return CommonCryptoSPI.CCKDFAlgorithm(kCCKDFAlgorithmAnsiX963)
         }
     }
 }
 
-public enum PBKDFAlgorithm: RawRepresentable {
+public enum CCPBKDFAlgorithm: RawRepresentable {
     case pbkdf2
     
-    public typealias RawValue = CCPBKDFAlgorithm
+    public typealias RawValue = CommonCrypto.CCPBKDFAlgorithm
     
     public init?(rawValue: RawValue) {
         switch rawValue {
-        case CCPBKDFAlgorithm(kCCPBKDF2): self = .pbkdf2
+        case CommonCrypto.CCPBKDFAlgorithm(kCCPBKDF2): self = .pbkdf2
         default: return nil
         }
     }
     
-    public var rawValue: CCPBKDFAlgorithm { return CCPBKDFAlgorithm(kCCPBKDF2) }
+    public var rawValue: CommonCrypto.CCPBKDFAlgorithm { return CommonCrypto.CCPBKDFAlgorithm(kCCPBKDF2) }
 }
 
-public enum PseudoRandomAlgorithm: RawRepresentable {
+public enum CCPseudoRandomAlgorithm: RawRepresentable {
     case prfHmacSHA1
     case prfHmacSHA224
     case prfHmacSHA256
     case prfHmacSHA384
     case prfHmacSHA512
     
-    public typealias RawValue = CCPseudoRandomAlgorithm
+    public typealias RawValue = CommonCrypto.CCPseudoRandomAlgorithm
     
     public init?(rawValue: RawValue) {
         switch rawValue {
-        case CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA1):    self = .prfHmacSHA1
-        case CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA224):  self = .prfHmacSHA224
-        case CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA256):  self = .prfHmacSHA256
-        case CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA384):  self = .prfHmacSHA384
-        case CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA512):  self = .prfHmacSHA512
+        case CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA1):    self = .prfHmacSHA1
+        case CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA224):  self = .prfHmacSHA224
+        case CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA256):  self = .prfHmacSHA256
+        case CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA384):  self = .prfHmacSHA384
+        case CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA512):  self = .prfHmacSHA512
         default: return nil
         }
     }
     
-    public var rawValue: CCPseudoRandomAlgorithm {
+    public var rawValue: CommonCrypto.CCPseudoRandomAlgorithm {
         switch self {
-        case .prfHmacSHA1:      return CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA1)
-        case .prfHmacSHA224:    return CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA224)
-        case .prfHmacSHA256:    return CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA256)
-        case .prfHmacSHA384:    return CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA384)
-        case .prfHmacSHA512:    return CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA512)
+        case .prfHmacSHA1:      return CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA1)
+        case .prfHmacSHA224:    return CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA224)
+        case .prfHmacSHA256:    return CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA256)
+        case .prfHmacSHA384:    return CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA384)
+        case .prfHmacSHA512:    return CommonCrypto.CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA512)
         }
     }
 }
@@ -91,9 +91,9 @@ public enum PseudoRandomAlgorithm: RawRepresentable {
 ///   - derivedSize: The expected length of the derived key in bytes. It cannot be zero.
 /// - Throws: A `CryptoError` describing the issue.
 /// - Returns: The resulting derived key produced by the function.
-public func KeyDerivationPBKDF(algorithm: PBKDFAlgorithm, password: String, salt: Data, prf: PseudoRandomAlgorithm, rounds: UInt32, derivedSize: Int) throws -> Data {
+public func CCKeyDerivationPBKDF(algorithm: CCPBKDFAlgorithm, password: String, salt: Data, prf: CCPseudoRandomAlgorithm, rounds: UInt32, derivedSize: Int) throws -> Data {
     var derived = [UInt8](repeating: 0, count: derivedSize)
-    let status = CryptorStatus(CCKeyDerivationPBKDF(algorithm.rawValue, password, password.count, Array(salt), salt.count, prf.rawValue, rounds, &derived, derivedSize))
+    let status = CCCryptorStatus(CommonCrypto.CCKeyDerivationPBKDF(algorithm.rawValue, password, password.count, Array(salt), salt.count, prf.rawValue, rounds, &derived, derivedSize))
     guard status == .success else { throw CryptoError(status) }
     return Data(derived)
 }
@@ -105,8 +105,8 @@ public func KeyDerivationPBKDF(algorithm: PBKDFAlgorithm, password: String, salt
 ///   - salt: Salt.
 /// - Throws: A `CryptoError` describing the issue.
 @available(iOS 13.0, macOS 10.15, *)
-public func KDFParametersCreatePbkdf2(_ parameters: inout KDFParametersRef?, rounds: UInt32, salt: Data) throws {
-    let status = CryptorStatus(CCKDFParametersCreatePbkdf2(&parameters, rounds, Array(salt), salt.count))
+public func CCKDFParametersCreatePbkdf2(_ parameters: inout CCKDFParametersRef?, rounds: UInt32, salt: Data) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCKDFParametersCreatePbkdf2(&parameters, rounds, Array(salt), salt.count))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -118,8 +118,8 @@ public func KDFParametersCreatePbkdf2(_ parameters: inout KDFParametersRef?, rou
 ///   - context: Data shared between entities.
 /// - Throws: A `CryptoError` describing the issue.
 @available(iOS 13.0, macOS 10.15, *)
-public func KDFParametersCreateCtrHmac(_ parameters: inout KDFParametersRef?, label: Data, context: Data) throws {
-    let status = CryptorStatus(CCKDFParametersCreateCtrHmac(&parameters, Array(label), label.count, Array(context), context.count))
+public func CCKDFParametersCreateCtrHmac(_ parameters: inout CCKDFParametersRef?, label: Data, context: Data) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCKDFParametersCreateCtrHmac(&parameters, Array(label), label.count, Array(context), context.count))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -130,8 +130,8 @@ public func KDFParametersCreateCtrHmac(_ parameters: inout KDFParametersRef?, la
 ///   - context: Data shared between entities.
 /// - Throws: A `CryptoError` describing the issue.
 @available(iOS 13.0, macOS 10.15, *)
-public func KDFParametersCreateCtrHmacFixed(_ parameters: inout KDFParametersRef?, context: Data) throws {
-    let status = CryptorStatus(CCKDFParametersCreateCtrHmacFixed(&parameters, Array(context), context.count))
+public func CCKDFParametersCreateCtrHmacFixed(_ parameters: inout CCKDFParametersRef?, context: Data) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCKDFParametersCreateCtrHmacFixed(&parameters, Array(context), context.count))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -143,8 +143,8 @@ public func KDFParametersCreateCtrHmacFixed(_ parameters: inout KDFParametersRef
 ///   - context: Data shared between entities.
 /// - Throws: A `CryptoError` describing the issue.
 @available(iOS 13.0, macOS 10.15, *)
-public func KDFParametersCreateHkdf(_ parameters: inout KDFParametersRef?, salt: Data, context: Data) throws {
-    let status = CryptorStatus(CCKDFParametersCreateHkdf(&parameters, Array(salt), salt.count, Array(context), context.count))
+public func CCKDFParametersCreateHkdf(_ parameters: inout CCKDFParametersRef?, salt: Data, context: Data) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCKDFParametersCreateHkdf(&parameters, Array(salt), salt.count, Array(context), context.count))
     guard status == .success else { throw CryptoError(status) }
 }
 
@@ -155,16 +155,16 @@ public func KDFParametersCreateHkdf(_ parameters: inout KDFParametersRef?, salt:
 ///   - sharedInfo: Data shared between entities.
 /// - Throws: A `CryptoError` describing the issue.
 @available(iOS 13.0, macOS 10.15, *)
-public func KDFParametersCreateAnsiX963(_ parameters: inout KDFParametersRef?, sharedInfo: Data) throws {
-    let status = CryptorStatus(CCKDFParametersCreateAnsiX963(&parameters, Array(sharedInfo), sharedInfo.count))
+public func CCKDFParametersCreateAnsiX963(_ parameters: inout CCKDFParametersRef?, sharedInfo: Data) throws {
+    let status = CCCryptorStatus(CommonCryptoSPI.CCKDFParametersCreateAnsiX963(&parameters, Array(sharedInfo), sharedInfo.count))
     guard status == .success else { throw CryptoError(status) }
 }
 
 /// Clear and release a KDFParametersRef.
 /// - Parameter reference: A KDFParametersRef instance.
 @available(iOS 13.0, macOS 10.15, *)
-public func KDFParametersDestroy(_ reference: KDFParametersRef) {
-    CCKDFParametersDestroy(reference)
+public func CCKDFParametersDestroy(_ reference: CCKDFParametersRef) {
+    CommonCryptoSPI.CCKDFParametersDestroy(reference)
 }
 
 /// Generic key derivation function supporting multiple key derivation algorithms.
@@ -176,10 +176,10 @@ public func KDFParametersDestroy(_ reference: KDFParametersRef) {
 /// - Throws: A `CryptoError` describing the issue.
 /// - Returns: The derived key.
 @available(iOS 13.0, macOS 10.15, *)
-public func DeriveKey(_ parameters: KDFParametersRef?, digest: DigestAlgorithm, key: Data, derivedSize: Int) throws -> Data {
+public func CCDeriveKey(_ parameters: CCKDFParametersRef?, digest: CCDigestAlgorithm, key: Data, derivedSize: Int) throws -> Data {
     var derived = [UInt8](repeating: 0, count: derivedSize)
     let status = key.withUnsafeBytes { keyPtr in
-        CryptorStatus(CCDeriveKey(parameters, digest.rawValue, keyPtr.baseAddress, keyPtr.count, &derived, derivedSize))
+        CCCryptorStatus(CommonCryptoSPI.CCDeriveKey(parameters, digest.rawValue, keyPtr.baseAddress, keyPtr.count, &derived, derivedSize))
     }
     guard status == .success else { throw CryptoError(status) }
     return Data(derived)
