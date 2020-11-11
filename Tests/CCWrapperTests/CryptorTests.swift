@@ -2,6 +2,38 @@ import XCTest
 import CCWrapper
 
 final class SomeTest: XCTestCase {
+    func testRSA() throws {
+        var privateKey: CCRSACryptorRef?
+        var publicKey: CCRSACryptorRef?
+        
+        defer {
+            CCRSACryptorRelease(privateKey)
+            CCRSACryptorRelease(publicKey)
+        }
+        
+        try CCRSACryptorGeneratePair(keySize: 2048, e: 65537, publicKey: &publicKey, privateKey: &privateKey)
+        
+        print(privateKey, publicKey)
+        
+        let message = Data("Hello World".utf8)
+        
+        let signature = try CCRSACryptorSign(privateKey: privateKey, padding: .pss, data: message, digest: .sha256, saltSize: 0)
+        try CCRSACryptorVerify(publicKey: publicKey, padding: .pss, data: message, signature: signature, digest: .sha256, saltSize: 0)
+        
+        print(signature as NSData)
+        
+        let ct = try CCRSACryptorEncrypt(publicKey: publicKey, padding: .oaep, plainText: message, tag: nil, digest: .sha256)
+        let pt = try CCRSACryptorDecrypt(privateKey: privateKey, padding: .oaep, cipherText: ct, tag: nil, digest: .sha256)
+        
+        print(String(data: pt, encoding: .utf8)!)
+        
+        print(try CCRSAGetKeyComponents(key: privateKey))
+        print(try CCRSAGetKeyComponents(key: publicKey))
+        
+        print(try CCRSACryptorExport(key: privateKey) as NSData)
+        print(try CCRSACryptorExport(key: publicKey) as NSData)
+    }
+    
     @available(iOS 13.0, macOS 10.15, *)
     func testKDF() throws {
         print(try CCKeyDerivationPBKDF(algorithm: .pbkdf2, password: "Password", salt: Data(), prf: .prfHmacSHA256, rounds: 10000, derivedSize: 32) as NSData)
