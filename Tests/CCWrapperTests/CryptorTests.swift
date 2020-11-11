@@ -2,6 +2,52 @@ import XCTest
 import CCWrapper
 
 final class SomeTest: XCTestCase {
+    @available(iOS 13.0, macOS 10.15, *)
+    func testEC() throws {
+        var privateKey: CCECCryptorRef?
+        var publicKey: CCECCryptorRef?
+        
+        defer {
+            CCECCryptorRelease(privateKey)
+            CCECCryptorRelease(publicKey)
+        }
+        
+        try CCECCryptorGeneratePair(keySize: 256, publicKey: &publicKey, privateKey: &privateKey)
+        
+        print(privateKey!, publicKey!)
+        
+        let message = Data("Hello World".utf8)
+        let digest = try CCDigest(algorithm: .sha256, data: message)
+        
+        let signature = try CCECCryptorSignHash(privateKey: privateKey, hash: digest)
+        try CCECCryptorVerifyHash(publicKey: publicKey, hash: digest, signature: signature)
+        
+        print(signature as NSData)
+        
+        var bobPrivate: CCECCryptorRef?
+        var bobPublic: CCECCryptorRef?
+        
+        defer {
+            CCECCryptorRelease(bobPrivate)
+            CCECCryptorRelease(bobPublic)
+        }
+        
+        try CCECCryptorGeneratePair(keySize: 256, publicKey: &bobPublic, privateKey: &bobPrivate)
+        
+        let shared = try CCECCryptorComputeSharedSecret(privateKey: privateKey, publicKey: bobPublic, size: 32)
+        let bobShared = try CCECCryptorComputeSharedSecret(privateKey: bobPrivate, publicKey: publicKey, size: 32)
+        
+        print(shared as NSData, bobShared as NSData)
+        
+        print(try CCECCryptorGetKeyComponents(key: privateKey), try CCECCryptorGetKeyComponents(key: publicKey))
+        
+        let entropy = try CCRandomGenerateBytes(count: CCECCryptorTwinDiversifyEntropySize(publicKey))
+        var diversed: CCCryptorRef?
+        try CCECCryptorTwinDiversifyKey(inKey: publicKey, entropy: entropy, outKey: &diversed)
+        
+        print(entropy as NSData, try CCECCryptorGetKeyComponents(key: diversed))
+    }
+    
     func testRSA() throws {
         var privateKey: CCRSACryptorRef?
         var publicKey: CCRSACryptorRef?
@@ -13,7 +59,7 @@ final class SomeTest: XCTestCase {
         
         try CCRSACryptorGeneratePair(keySize: 2048, e: 65537, publicKey: &publicKey, privateKey: &privateKey)
         
-        print(privateKey, publicKey)
+        print(privateKey!, publicKey!)
         
         let message = Data("Hello World".utf8)
         
@@ -94,8 +140,8 @@ final class SomeTest: XCTestCase {
         try CCCryptorAddParameter(ref, parameter: .dataSize, size: msg.count)
         try CCCryptorAddParameter(ref, parameter: .authenticationData, data: aad)
         
-        let ct = try CCCryptorUpdate(ref, data: msg)
-        try CCCryptorFinalize(ref)
+        var ct = try CCCryptorUpdate(ref, data: msg)
+        ct += try CCCryptorFinalize(ref)
         let tag = try CCCryptorGetParameter(ref, parameter: .authenticationTag, size: 16)
         print(tag as NSData)
         try CCCryptorRelease(ref)
@@ -106,8 +152,8 @@ final class SomeTest: XCTestCase {
         try CCCryptorAddParameter(ref, parameter: .dataSize, size: msg.count)
         try CCCryptorAddParameter(ref, parameter: .authenticationData, data: aad)
         
-        let pt = try CCCryptorUpdate(ref, data: ct)
-        try CCCryptorFinalize(ref)
+        var pt = try CCCryptorUpdate(ref, data: ct)
+        pt += try CCCryptorFinalize(ref)
         let ver = try CCCryptorGetParameter(ref, parameter: .authenticationTag, size: 16)
         print(ver as NSData)
         print(String(data: pt, encoding: .utf8)!)
