@@ -6,6 +6,8 @@ public typealias CCDigestRef = CommonCryptoSPI.CCDigestRef
 
 /// Algorithms implemented in this module.
 public enum CCDigestAlgorithm: RawRepresentable {
+    /// No digest.
+    case none
     /// MD5 digest.
     @available(iOS, deprecated: 13.0)
     @available(macOS, deprecated: 10.15)
@@ -31,6 +33,7 @@ public enum CCDigestAlgorithm: RawRepresentable {
     
     public init?(rawValue: RawValue) {
         switch rawValue {
+        case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestNone):      self = .none
         case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestMD5):       self = .md5
         case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestRMD160):    self = .rmd160
         case CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA1):      self = .sha1
@@ -44,6 +47,7 @@ public enum CCDigestAlgorithm: RawRepresentable {
     
     public var rawValue: CommonCryptoSPI.CCDigestAlgorithm {
         switch self {
+        case .none:     return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestNone)
         case .md5:      return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestMD5)
         case .rmd160:   return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestRMD160)
         case .sha1:     return CommonCryptoSPI.CCDigestAlgorithm(kCCDigestSHA1)

@@ -42,10 +42,11 @@ extern "C" {
 /*!
     @enum       CCDigestAlgorithm
     @abstract   Algorithms implemented in this module.
-
-    @constant   kCCDigestMD5        MD5 digest, Deprecated in iPhoneOS 13.0 and MacOSX10.15
-    @constant   kCCDigestRMD160     RMD 160 bit digest, Deprecated in iPhoneOS 13.0 and MacOSX10.15
-    @constant   kCCDigestSHA1       SHA-1 digest, Deprecated in iPhoneOS 13.0 and MacOSX10.15
+        
+    @constant   kCCDigestNone          Digest Selector for "no digest"
+    @constant   kCCDigestMD5           MD5 digest, Deprecated in iPhoneOS 13.0 and MacOSX10.15
+    @constant   kCCDigestRMD160    RMD 160 bit digest, Deprecated in iPhoneOS 13.0 and MacOSX10.15
+    @constant   kCCDigestSHA1         SHA-1 digest, Deprecated in iPhoneOS 13.0 and MacOSX10.15
     @constant   kCCDigestSHA224     SHA-2 224 bit digest
     @constant   kCCDigestSHA256     SHA-2 256 bit digest
     @constant   kCCDigestSHA384     SHA-2 384 bit digest
@@ -53,6 +54,7 @@ extern "C" {
  */
 
 enum {
+    kCCDigestNone = 0,
     kCCDigestMD5 API_DEPRECATED(CC_DIGEST_DEPRECATION_WARNING, macos(10.4, 10.15), ios(5.0, 13.0)) = 3,
     kCCDigestRMD160 API_DEPRECATED(CC_DIGEST_DEPRECATION_WARNING, macos(10.4, 10.15), ios(5.0, 13.0)) = 5,
     kCCDigestSHA1 API_DEPRECATED(CC_DIGEST_DEPRECATION_WARNING, macos(10.4, 10.15), ios(5.0, 13.0)) = 8,
