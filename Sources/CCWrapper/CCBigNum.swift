@@ -297,17 +297,6 @@ public func CCBigNumModI(_ dividend: CCBigNumRef, _ modulus: UInt32) throws -> U
     return result
 }
 
-/// Find the square of a BigNum.
-/// - Parameter bn: The BigNum to square.
-/// - Throws: A `CryptoError` describing the issue.
-/// - Returns: The result.
-public func CCBigNumSquare(_ bn: CCBigNumRef) throws -> CCBigNumRef {
-    let result = try CCCreateBigNum()
-    let status = CCCryptorStatus(CommonCryptoSPI.CCBigNumSquare(result, bn))
-    guard status == .success else { throw CryptoError(status) }
-    return result
-}
-
 /// Perform Modular Multiplication.
 /// - Parameters:
 ///   - a: A BigNum.
@@ -318,32 +307,6 @@ public func CCBigNumSquare(_ bn: CCBigNumRef) throws -> CCBigNumRef {
 public func CCBigNumMulMod(_ a: CCBigNumRef, _ b: CCBigNumRef, _ mod: CCBigNumRef) throws -> CCBigNumRef {
     let result = try CCCreateBigNum()
     let status = CCCryptorStatus(CommonCryptoSPI.CCBigNumMulMod(result, a, b, mod))
-    guard status == .success else { throw CryptoError(status) }
-    return result
-}
-
-/// Perform Modular Squaring.
-/// - Parameters:
-///   - bn: A BigNum.
-///   - mod: The modulus.
-/// - Throws: A `CryptoError` describing the issue.
-/// - Returns: The result.
-public func CCBigNumSquareMod(_ bn: CCBigNumRef, mod: CCBigNumRef) throws -> CCBigNumRef {
-    let result = try CCCreateBigNum()
-    let status = CCCryptorStatus(CommonCryptoSPI.CCBigNumSquareMod(result, bn, mod))
-    guard status == .success else { throw CryptoError(status) }
-    return result
-}
-
-/// Perform Modular Inversion.
-/// - Parameters:
-///   - bn: A BigNum.
-///   - mod: The modulus.
-/// - Throws: A `CryptoError` describing the issue.
-/// - Returns: The result.
-public func CCBigNumInverseMod(_ bn: CCBigNumRef, mod: CCBigNumRef) throws -> CCBigNumRef {
-    let result = try CCCreateBigNum()
-    let status = CCCryptorStatus(CommonCryptoSPI.CCBigNumInverseMod(result, bn, mod))
     guard status == .success else { throw CryptoError(status) }
     return result
 }
@@ -431,53 +394,3 @@ public func CCBigNumIsNegative(_ bn: CCBigNumRef) throws -> Bool {
     guard CCCryptorStatus(status) == .success else { throw CryptoError(CCCryptorStatus(status)) }
     return isNegative
 }
-
-#if os(macOS)
-/// Divides a BigNum by two.
-/// - Parameter a: The BigNum to divide.
-/// - Throws: A `CryptoError` describing the issue.
-/// - Returns: The result.
-public func CCBigNumDiv2(_ a: CCBigNumRef) throws -> CCBigNumRef {
-    let result = try CCCreateBigNum()
-    let status = CCCryptorStatus(CommonCryptoSPI.CCBigNumDiv2(result, a))
-    guard status == .success else { throw CryptoError(status) }
-    return result
-}
-
-/// Find the Greatest Common Denominator of two BigNums.
-/// - Parameters:
-///   - a: A BigNum.
-///   - b: A BigNum.
-/// - Throws: A `CryptoError` describing the issue.
-/// - Returns: The result.
-public func CCBigNumGCD(_ a: CCBigNumRef, _ b: CCBigNumRef) throws -> CCBigNumRef {
-    let result = try CCCreateBigNum()
-    let status = CCCryptorStatus(CommonCryptoSPI.CCBigNumGCD(result, a, b))
-    guard status == .success else { throw CryptoError(status) }
-    return result
-}
-
-/// Find the Least Common Multiple of two BigNums.
-/// - Parameters:
-///   - a: A BigNum.
-///   - b: A BigNum.
-/// - Throws: A `CryptoError` describing the issue.
-/// - Returns: The result.
-public func CCBigNumLCM(_ a: CCBigNumRef, _ b: CCBigNumRef) throws -> CCBigNumRef {
-    let result = try CCCreateBigNum()
-    let status = CCCryptorStatus(CommonCryptoSPI.CCBigNumLCM(result, a, b))
-    guard status == .success else { throw CryptoError(status) }
-    return result
-}
-
-/// Determines if a BigNum is odd.
-/// - Parameter bn: A BigNum.
-/// - Throws: A `CryptoError` describing the issue.
-/// - Returns: True or false.
-public func CCBigNumIsOdd(_ bn: CCBigNumRef) throws -> Bool {
-    var status = CCStatus(kCCSuccess)
-    let isOdd = CommonCryptoSPI.CCBigNumIsOdd(&status, bn)
-    guard CCCryptorStatus(status) == .success else { throw CryptoError(CCCryptorStatus(status)) }
-    return isOdd
-}
-#endif
